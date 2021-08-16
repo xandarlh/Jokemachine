@@ -15,11 +15,13 @@ namespace Jokemachine
             "What do a tick and the Eiffel Tower have in common? - They're both Paris sites.",
             "How do you follow Will Smith in the snow? - You follow the fresh prints."
         };
-        public List<string> blondJokesEN = new List<string>() {
-            "Ha ha ha",
-            "Ha ha",
-            "Ha"
+
+        public List<string> blondineJokesDK = new List<string>()
+        {
+            "En røver kommer ind i butikken og stjæler et TV. blondinen løber efter ham og råber, “Vent, du har glemt fjernbetjeningen!”",
+            "To blondiner faldt ned i et hul. Den ene Sagde, “Det er mørkt her nede, er det ikke?” Den anden svarede: “Jeg ved det ikke, jeg kan ikke se."
         };
+
         public Dalmanager()
         {
 

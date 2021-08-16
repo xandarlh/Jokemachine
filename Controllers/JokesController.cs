@@ -15,8 +15,8 @@ namespace Jokemachine.Controllers
 
         Dalmanager dal = new Dalmanager();
          
-        public List<string> dadJokesEN = D;
-        public List<string> blondJokesEN; 
+        //List<string> dadJokesEN;
+        //List<string> blondJokesEN; 
 
         int index = 0;
         Random random = new Random();
@@ -26,6 +26,11 @@ namespace Jokemachine.Controllers
         [HttpGet("Get Joke")]
         public string Get(string category)
         {
+            //All jokes from dal
+            List<string> dadJokesEN = dal.dadJokesEN;
+            List<string> blondineJokesDK = dal.blondineJokesDK;
+
+
             //Method for getting the pref language from the header.
             string language = Request.Headers["Accept-Language"].ToString();
             string[] lang = language.Split(',');
@@ -38,33 +43,68 @@ namespace Jokemachine.Controllers
                 }
             }
 
-            List<string> Dadjokes = HttpContext.Session.GetObjectFromJson<List<string>>("Dadjokes");
-
-            if (category == "Dadjoke")
+            //Checks what prefered language is
+            //To pick a catogory:
+            //Input options = "Dadjoke" and "Blondinejoke" is implemented.
+            if (prefLang == "en")
             {
-                if (Dadjokes == null)
+                List<string> Dadjokes = HttpContext.Session.GetObjectFromJson<List<string>>("Dadjokes");
+                if (category == "Dadjoke")
                 {
-                    HttpContext.Session.SetObjectAsJson("Dadjokes", dadJokesEN);
-                    List<string> tempDadjokes = HttpContext.Session.GetObjectFromJson<List<string>>("Dadjokes");
-                    index = random.Next(tempDadjokes.Count);
-                    string tempJoke = tempDadjokes[index];
-                    dadJokesEN.RemoveAt(index);
-                    HttpContext.Session.SetObjectAsJson("Dadjokes", dadJokesEN);
-                    return tempJoke;
+                    if (Dadjokes == null)
+                    {
+                        HttpContext.Session.SetObjectAsJson("Dadjokes", dadJokesEN);
+                        List<string> tempDadjokes = HttpContext.Session.GetObjectFromJson<List<string>>("Dadjokes");
+                        index = random.Next(tempDadjokes.Count);
+                        string tempJoke = tempDadjokes[index];
+                        dadJokesEN.RemoveAt(index);
+                        HttpContext.Session.SetObjectAsJson("Dadjokes", dadJokesEN);
+                        return tempJoke;
+                    }
+                    else
+                    {
+                        index = random.Next(Dadjokes.Count);
+                        string tempJoke = Dadjokes[index];
+                        Dadjokes.RemoveAt(index);
+                        HttpContext.Session.SetObjectAsJson("Dadjokes", Dadjokes);
+                        return tempJoke;
+                    }
                 }
-                else
+                else if(category == "")
                 {
-                    index = random.Next(Dadjokes.Count);
-                    string tempJoke = Dadjokes[index];
-                    Dadjokes.RemoveAt(index);
-                    HttpContext.Session.SetObjectAsJson("Dadjokes", Dadjokes);
-                    return tempJoke;
+                    return null;
                 }
             }
-            else
+            else if (prefLang == "da")
             {
-                return null;
+                List<string> Blondinejokes = HttpContext.Session.GetObjectFromJson<List<string>>("Blondinejokes");
+                if (category == "Blondinejoke")
+                {
+                    if (Blondinejokes == null)
+                    {
+                        HttpContext.Session.SetObjectAsJson("Blondinejokes", blondineJokesDK);
+                        List<string> tempBlondinejokes = HttpContext.Session.GetObjectFromJson<List<string>>("Blondinejokes");
+                        index = random.Next(tempBlondinejokes.Count);
+                        string tempJoke = tempBlondinejokes[index];
+                        blondineJokesDK.RemoveAt(index);
+                        HttpContext.Session.SetObjectAsJson("Blondinejokes", blondineJokesDK);
+                        return tempJoke;
+                    }
+                    else
+                    {
+                        index = random.Next(Blondinejokes.Count);
+                        string tempJoke = Blondinejokes[index];
+                        Blondinejokes.RemoveAt(index);
+                        HttpContext.Session.SetObjectAsJson("Blondinejokes", Blondinejokes);
+                        return tempJoke;
+                    }
+                }
+                else if (category == "")
+                {
+                    return null;
+                }
             }
+            return null;
         }
     }
 }
