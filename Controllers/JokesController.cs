@@ -13,11 +13,7 @@ namespace Jokemachine.Controllers
     public class JokesController : ControllerBase
     {
 
-        Dalmanager dal = new Dalmanager();
-         
-        //List<string> dadJokesEN;
-        //List<string> blondJokesEN; 
-
+        Dalmanager dal = new Dalmanager();       
         int index = 0;
         Random random = new Random();
 
@@ -32,6 +28,10 @@ namespace Jokemachine.Controllers
 
 
             //Method for getting the pref language from the header.
+            //Starts with taking the Accept-language from the header -
+            //then splits it to find the longest, which is the users prefered language -
+            //the final result will be "da"/"en" which is the 'prefLang' attribute.
+            
             string language = Request.Headers["Accept-Language"].ToString();
             string[] lang = language.Split(',');
             string prefLang = "";
@@ -48,9 +48,11 @@ namespace Jokemachine.Controllers
             //Input options = "Dadjoke" and "Blondinejoke" is implemented.
             if (prefLang == "en")
             {
+                //Checks if thers currently "dadjokes" in the session
                 List<string> Dadjokes = HttpContext.Session.GetObjectFromJson<List<string>>("Dadjokes");
                 if (category == "Dadjoke")
                 {
+                    //if there isn't dadjokes in the session it will fill a new one with the "dadJokesEN" from the dalmanager.
                     if (Dadjokes == null)
                     {
                         HttpContext.Session.SetObjectAsJson("Dadjokes", dadJokesEN);
